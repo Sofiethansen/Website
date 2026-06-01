@@ -6,10 +6,40 @@
     <title>Copenhagen Events</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body>
-    <h1>Creative Events in Copenhagen</h1>
-    <p class="subtitle">Discover creative events and meet new people</p>
-    <div id="events-container"></div>
-    <script src="script.js"></script>
-  </body>
+ <body>
+
+  <!-- Hamburger Menu -->
+  <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+  <div class="sidebar" id="sidebar">
+    <a href="#">📋 Information</a>
+    <a href="#">🗺️ Map</a>
+    <a href="#">👤 Profile</a>
+    <a href="#">🔑 Login</a>
+  </div>
+
+  <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+
+  <!-- Main content -->
+  <h1>Creative Events in Copenhagen</h1>
+  <p class="subtitle">Discover creative events and meet new people</p>
+  <h2 class="section-title">Events coming up</h2>
+<div class="create-section">
+  <button class="create-btn" onclick="toggleForm()">+ Create Event</button>
+
+  <div class="create-form" id="create-form">
+    <h2>Create a new event</h2>
+    <input type="text" id="input-title" placeholder="Event title" />
+    <input type="date" id="input-date" />
+    <input type="text" id="input-location" placeholder="Location" />
+    <input type="text" id="input-category" placeholder="Category (e.g. Music, Art)" />
+    <textarea id="input-description" placeholder="Describe your event..."></textarea>
+    <input type="file" id="input-photo" accept="image/*" />
+    <button class="submit-btn" onclick="submitEvent()">Add Event</button>
+  </div>
+</div>
+  <div id="events-container"></div>
+
+  <script src="script.js"></script>
+</body>
 </html>
