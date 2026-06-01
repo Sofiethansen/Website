@@ -48,6 +48,7 @@ function submitAuth() {
 
 function showProfile(username) {
     currentUser = username;
+    localStorage.setItem('currentUser', username);
   document.getElementById('profile-icon').style.display = 'flex';
   document.getElementById('profile-initial').textContent = username[0].toUpperCase();
   document.getElementById('profile-username').textContent = username;
@@ -59,6 +60,8 @@ function toggleProfileMenu() {
 }
 
 function logout() {
+    currentUser = null;
+  localStorage.removeItem('currentUser');
   document.getElementById('profile-icon').style.display = 'none';
   document.getElementById('profile-menu').style.display = 'none';
 }
@@ -125,3 +128,7 @@ fetch('/api/events')
   .then(events => {
     events.forEach(event => addEventCard(event));
   });
+  const savedUser = localStorage.getItem('currentUser');
+if (savedUser) {
+  showProfile(savedUser);
+}
