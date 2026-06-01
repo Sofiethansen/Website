@@ -12,6 +12,7 @@ function submitEvent() {
   const date = document.getElementById('input-date').value;
   const location = document.getElementById('input-location').value;
   const category = document.getElementById('input-category').value;
+  const description = document.getElementById('input-description').value;
 
   if (!title || !date || !location || !category) {
     alert('Please fill in all fields!');
@@ -21,7 +22,7 @@ function submitEvent() {
   fetch('/api/events', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, date, location, category })
+    body: JSON.stringify({ title, date, location, category, description })
   })
   .then(res => res.json())
   .then(newEvent => {
@@ -31,6 +32,7 @@ function submitEvent() {
     document.getElementById('input-date').value = '';
     document.getElementById('input-location').value = '';
     document.getElementById('input-category').value = '';
+    document.getElementById('input-description').value = '';
   });
 }
 function addEventCard(event) {
@@ -44,6 +46,7 @@ function addEventCard(event) {
     <div class="card-body">
       <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
       <p><strong>Location:</strong> ${event.location}</p>
+      <p><strong>Description:</strong> ${event.description}</p>
       <span class="badge">🎨 ${event.category}</span>
     </div>
   `;

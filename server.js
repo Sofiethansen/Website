@@ -1,22 +1,42 @@
 const express = require('express');
+const Database = require('better-sqlite3');
 const app = express();
 
 app.use(express.static('.'));
-
-app.get('/api/events', (req, res) => {
-  res.json([
-    { title: "Photography Walk", date: "2026-07-10", location: "Nørreport", category: "Photography" },
-    { title: "Painting Evening", date: "2026-07-14", location: "Vesterbro", category: "Art" },
-    { title: "Jazz Jam Session", date: "2026-07-18", location: "Christianshavn", category: "Music" },
-    { title: "Knitting Meetup", date: "2026-07-20", location: "Frederiksberg", category: "Crafts" },
-    { title: "Running for Beginners", date: "2026-07-22", location: "Fælledparken", category: "Sport" }
-  ]);
-});
 app.use(express.json());
 
+const db = new Database('database.db');
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    date TEXT,
+    location TEXT,
+    category TEXT,
+    description TEXT
+  )
+`);
+const count = db.prepare('SELECT COUNT(*) as count FROM events').get();
+if (count.count === 0) {
+  const insert = db.prepare('INSERT INTO events (title, date, location, category, description) VALUES (?, ?, ?, ?, ?)');
+  insert.run('Photography Walk', '2026-07-05', 'Nørreport', 'Photography', '');
+  insert.run('Painting Evening', '2026-07-09', 'Vesterbro', 'Art', '');
+  insert.run('Jazz Jam Session', '2026-07-13', 'Christianshavn', 'Music', '');
+  insert.run('Knitting Meetup', '2026-07-18', 'Frederiksberg', 'Crafts', '');
+  insert.run('Running for Beginners', '2026-07-22', 'Fælledparken', 'Sport', '');
+}
+
+app.get('/api/events', (req, res) => {
+  const events = db.prepare('SELECT * FROM events').all();
+  res.json(events);
+});
+
 app.post('/api/events', (req, res) => {
-  const { title, date, location, category } = req.body;
-  const newEvent = { title, date, location, category };
+  const { title, date, location, category, description } = req.body;
+  const stmt = db.prepare('INSERT INTO events (title, date, location, category, description) VALUES (?, ?, ?, ?, ?)');
+  const result = stmt.run(title, date, location, category, description);
+  const newEvent = { id: result.lastInsertRowid, title, date, location, category, description };
   res.json(newEvent);
 });
 
