@@ -315,3 +315,34 @@ p.subtitle {
   border-radius: 8px;
   cursor: pointer;
 }
+.detail-container {
+  max-width: 600px;
+  margin: 60px auto;
+  background: white;
+  border-radius: 14px;
+  padding: 40px;
+  border: 1px solid #c0dd97;
+}
+
+.detail-container h1 {
+  color: #27500a;
+  margin-bottom: 20px;
+}
+
+.detail-container p {
+  font-size: 16px;
+  margin: 10px 0;
+  color: #444;
+}
+
+.back-btn {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: #639922;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.back-btn:hover {
+  text-decoration: underline;
+}

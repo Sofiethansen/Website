@@ -116,6 +116,7 @@ function addEventCard(event) {
       ${event.creator ? `<p style="font-size:12px; color:#639922; margin-top:8px;"> Created by ${event.creator}</p>` : ''}
     </div>
   `;
+  card.onclick = () => window.location.href = '/event.html?id=' + event.id;
   container.appendChild(card);
 }
 

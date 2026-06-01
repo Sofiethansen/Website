@@ -67,5 +67,8 @@ app.post('/api/login', (req, res) => {
     res.json({ success: false, message: 'Wrong username or password!' });
   }
 });
-
+app.get('/api/events/:id', (req, res) => {
+  const event = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id);
+  res.json(event);
+});
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
