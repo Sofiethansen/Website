@@ -1,4 +1,5 @@
 let authMode = 'login';
+let currentUser = null;
 
 function openLoginModal() {
   authMode = 'login';
@@ -46,6 +47,7 @@ function submitAuth() {
 }
 
 function showProfile(username) {
+    currentUser = username;
   document.getElementById('profile-icon').style.display = 'flex';
   document.getElementById('profile-initial').textContent = username[0].toUpperCase();
   document.getElementById('profile-username').textContent = username;
@@ -85,7 +87,7 @@ function submitEvent() {
   fetch('/api/events', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ title, date, location, category, description })
+    body: JSON.stringify({ title, date, location, category, description, creator: currentUser })
   })
   .then(res => res.json())
   .then(newEvent => {
@@ -110,7 +112,8 @@ function addEventCard(event) {
       <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
       <p><strong>Location:</strong> ${event.location}</p>
       <p><strong>Description:</strong> ${event.description}</p>
-      <span class="badge">🎨 ${event.category}</span>
+      <span class="badge"> ${event.category}</span>
+      ${event.creator ? `<p style="font-size:12px; color:#639922; margin-top:8px;"> Created by ${event.creator}</p>` : ''}
     </div>
   `;
   container.appendChild(card);

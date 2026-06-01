@@ -14,7 +14,8 @@ db.exec(`
     date TEXT,
     location TEXT,
     category TEXT,
-    description TEXT
+    description TEXT,
+    creator TEXT
   )
 `);
 db.exec(`
@@ -26,12 +27,12 @@ db.exec(`
 `);
 const count = db.prepare('SELECT COUNT(*) as count FROM events').get();
 if (count.count === 0) {
-  const insert = db.prepare('INSERT INTO events (title, date, location, category, description) VALUES (?, ?, ?, ?, ?)');
-  insert.run('Photography Walk', '2026-07-05', 'Nørreport', 'Photography', '');
-  insert.run('Painting Evening', '2026-07-09', 'Vesterbro', 'Art', '');
-  insert.run('Jazz Jam Session', '2026-07-13', 'Christianshavn', 'Music', '');
-  insert.run('Knitting Meetup', '2026-07-18', 'Frederiksberg', 'Crafts', '');
-  insert.run('Running for Beginners', '2026-07-22', 'Fælledparken', 'Sport', '');
+  const insert = db.prepare('INSERT INTO events (title, date, location, category, description, creator) VALUES (?, ?, ?, ?, ?, ?)');
+  insert.run('Photography Walk', '2026-07-05', 'Nørreport', 'Photography', '', '');
+  insert.run('Painting Evening', '2026-07-09', 'Vesterbro', 'Art', '', '');
+  insert.run('Jazz Jam Session', '2026-07-13', 'Christianshavn', 'Music', '', '');
+  insert.run('Knitting Meetup', '2026-07-18', 'Frederiksberg', 'Crafts', '','');
+  insert.run('Running for Beginners', '2026-07-22', 'Fælledparken', 'Sport', '', '');
 }
 
 app.get('/api/events', (req, res) => {
@@ -40,10 +41,10 @@ app.get('/api/events', (req, res) => {
 });
 
 app.post('/api/events', (req, res) => {
-  const { title, date, location, category, description } = req.body;
-  const stmt = db.prepare('INSERT INTO events (title, date, location, category, description) VALUES (?, ?, ?, ?, ?)');
-  const result = stmt.run(title, date, location, category, description);
-  const newEvent = { id: result.lastInsertRowid, title, date, location, category, description };
+  const { title, date, location, category, description, creator } = req.body;
+  const stmt = db.prepare('INSERT INTO events (title, date, location, category, description, creator) VALUES (?, ?, ?, ?, ?, ?)');
+  const result = stmt.run(title, date, location, category, description, creator);
+  const newEvent = { id: result.lastInsertRowid, title, date, location, category, description, creator };
   res.json(newEvent);
 });
 app.post('/api/signup', (req, res) => {
