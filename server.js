@@ -17,6 +17,13 @@ db.exec(`
     description TEXT
   )
 `);
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT
+  )
+`);
 const count = db.prepare('SELECT COUNT(*) as count FROM events').get();
 if (count.count === 0) {
   const insert = db.prepare('INSERT INTO events (title, date, location, category, description) VALUES (?, ?, ?, ?, ?)');
@@ -38,6 +45,26 @@ app.post('/api/events', (req, res) => {
   const result = stmt.run(title, date, location, category, description);
   const newEvent = { id: result.lastInsertRowid, title, date, location, category, description };
   res.json(newEvent);
+});
+app.post('/api/signup', (req, res) => {
+  const { username, password } = req.body;
+  try {
+    const stmt = db.prepare('INSERT INTO users (username, password) VALUES (?, ?)');
+    const result = stmt.run(username, password);
+    res.json({ success: true, username });
+  } catch (err) {
+    res.json({ success: false, message: 'Username already taken!' });
+  }
+});
+
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+  const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
+  if (user) {
+    res.json({ success: true, username: user.username });
+  } else {
+    res.json({ success: false, message: 'Wrong username or password!' });
+  }
 });
 
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

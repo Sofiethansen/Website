@@ -1,3 +1,66 @@
+let authMode = 'login';
+
+function openLoginModal() {
+  authMode = 'login';
+  document.getElementById('modal-title').textContent = 'Login';
+  document.getElementById('auth-modal').classList.add('open');
+  document.getElementById('modal-overlay').classList.add('open');
+  toggleMenu();
+}
+
+
+function closeModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+function switchMode() {
+  if (authMode === 'login') {
+    authMode = 'signup';
+    document.getElementById('modal-title').textContent = 'Sign up';
+  } else {
+    authMode = 'login';
+    document.getElementById('modal-title').textContent = 'Login';
+  }
+}
+
+function submitAuth() {
+  const username = document.getElementById('auth-username').value;
+  const password = document.getElementById('auth-password').value;
+  const url = authMode === 'login' ? '/api/login' : '/api/signup';
+
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      closeModal();
+      showProfile(data.username);
+    } else {
+      document.getElementById('auth-error').textContent = data.message;
+    }
+  });
+}
+
+function showProfile(username) {
+  document.getElementById('profile-icon').style.display = 'flex';
+  document.getElementById('profile-initial').textContent = username[0].toUpperCase();
+  document.getElementById('profile-username').textContent = username;
+}
+
+function toggleProfileMenu() {
+  const menu = document.getElementById('profile-menu');
+  menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+function logout() {
+  document.getElementById('profile-icon').style.display = 'none';
+  document.getElementById('profile-menu').style.display = 'none';
+}
+
 function toggleMenu() {
   document.getElementById('sidebar').classList.toggle('open');
   document.getElementById('overlay').classList.toggle('open');

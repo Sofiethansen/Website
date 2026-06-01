@@ -222,3 +222,96 @@ p.subtitle {
   margin-bottom: 12px;
   cursor: pointer;
 }
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 1001;
+}
+
+.modal-overlay.open { display: block; }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 14px;
+  padding: 36px;
+  width: 340px;
+  z-index: 1002;
+  text-align: left;
+}
+
+.modal.open { display: block; }
+
+.modal h2 { color: #27500a; margin-bottom: 20px; }
+
+.modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1px solid #c0dd97;
+  border-radius: 8px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.switch-auth {
+  text-align: center;
+  font-size: 13px;
+  margin-top: 12px;
+  color: #555;
+}
+
+.switch-auth span {
+  color: #639922;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.profile-icon {
+  position: fixed;
+  top: 20px; right: 20px;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background-color: #639922;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.profile-menu {
+  position: fixed;
+  top: 72px; right: 20px;
+  background: white;
+  border: 1px solid #c0dd97;
+  border-radius: 10px;
+  padding: 16px;
+  z-index: 1000;
+  min-width: 160px;
+  text-align: center;
+}
+
+.profile-menu p {
+  font-weight: bold;
+  color: #27500a;
+  margin-bottom: 10px;
+}
+
+.profile-menu button {
+  background-color: #639922;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+}

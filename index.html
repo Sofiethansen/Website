@@ -15,10 +15,33 @@
     <a href="#">📋 Information</a>
     <a href="#">🗺️ Map</a>
     <a href="#">👤 Profile</a>
-    <a href="#">🔑 Login</a>
+    <a href="#" onclick="openLoginModal()"> Login</a>
   </div>
 
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
+  <!-- Login/Signup Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
+
+<div class="modal" id="auth-modal">
+  <h2 id="modal-title">Login</h2>
+
+  <input type="text" id="auth-username" placeholder="Username" />
+  <input type="password" id="auth-password" placeholder="Password" />
+
+  <button class="submit-btn" onclick="submitAuth()">Continue</button>
+  <p class="switch-auth">Don't have an account? <span onclick="switchMode()">Sign up</span></p>
+  <p id="auth-error" style="color: red; font-size: 13px;"></p>
+</div>
+
+<!-- Profile icon (hidden until logged in) -->
+<div class="profile-icon" id="profile-icon" style="display:none" onclick="toggleProfileMenu()">
+  <span id="profile-initial">S</span>
+</div>
+
+<div class="profile-menu" id="profile-menu" style="display:none">
+  <p id="profile-username"></p>
+  <button onclick="logout()">Log out</button>
+</div>
 
   <!-- Main content -->
   <h1>Creative Events in Copenhagen</h1>
