@@ -104,7 +104,9 @@ function submitEvent() {
   });
 }
 function addEventCard(event) {
-  const container = document.getElementById('events-container');
+  const currentUser = localStorage.getItem('currentUser');
+  const isMyEvent = currentUser && event.creator === currentUser;
+  const container = document.getElementById(isMyEvent ? 'my-events-container' : 'events-container');
   const card = document.createElement('div');
   card.className = 'event-card';
   card.innerHTML = `
@@ -112,16 +114,15 @@ function addEventCard(event) {
       <h2>${event.title}</h2>
     </div>
     <div class="card-body">
-      <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
-      <p><strong>Location:</strong> ${event.location}</p>
-      <p><strong>Description:</strong> ${event.description}</p>
-      <span class="badge"> ${event.category}</span>
-      ${event.creator ? `<p style="font-size:12px; color:#639922; margin-top:8px;"> Created by ${event.creator}</p>` : ''}
+      <p> <strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
+      <p> <strong>Location:</strong> ${event.location}</p>
+      <span class="badge">🎨 ${event.category}</span>
+      ${event.creator ? `<p style="font-size:12px; color:#639922; margin-top:8px;">👤 Created by ${event.creator}</p>` : ''}
     </div>
   `;
-  card.onclick = () => window.location.href = '/event.html?id=' + event.id;
+  card.querySelector('.card-header').onclick = () => window.location.href = '/event.html?id=' + event.id;
   container.appendChild(card);
-}
+  }
 
 fetch('/api/events')
   .then(res => res.json())
@@ -131,4 +132,45 @@ fetch('/api/events')
   const savedUser = localStorage.getItem('currentUser');
 if (savedUser) {
   showProfile(savedUser);
+}
+function showMyJoinedEvents() {
+  const currentUser = localStorage.getItem('currentUser');
+  if (!currentUser) {
+    alert('Please log in to see your joined events!');
+    return;
+  }
+
+  toggleMenu();
+
+  const panel = document.getElementById('joined-events-panel');
+  const container = document.getElementById('joined-events-container');
+  panel.style.display = 'block';
+  container.innerHTML = '<p>Loading...</p>';
+
+  fetch('/api/users/' + currentUser + '/joined')
+    .then(res => res.json())
+    .then(events => {
+      if (events.length === 0) {
+        container.innerHTML = '<p style="color:#639922;">You have not joined any events yet!</p>';
+        return;
+      }
+      container.innerHTML = '';
+      events.forEach(event => {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        card.style.marginBottom = '16px';
+        card.innerHTML = `
+          <div class="card-header">
+            <h2>${event.title}</h2>
+          </div>
+          <div class="card-body">
+            <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
+            <p><strong>Location:</strong> ${event.location}</p>
+            <span class="badge">🎨 ${event.category}</span>
+          </div>
+        `;
+        card.onclick = () => window.location.href = '/event.html?id=' + event.id;
+        container.appendChild(card);
+      });
+    });
 }

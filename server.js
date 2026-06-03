@@ -71,4 +71,43 @@ app.get('/api/events/:id', (req, res) => {
   const event = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id);
   res.json(event);
 });
+app.delete('/api/events/:id', (req, res) => {
+  db.prepare('DELETE FROM events WHERE id = ?').run(req.params.id);
+  res.json({ success: true });
+});
+db.exec(`
+  CREATE TABLE IF NOT EXISTS participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    event_id INTEGER,
+    username TEXT,
+    UNIQUE(event_id, username)
+  )
+`);
+app.post('/api/events/:id/join', (req, res) => {
+  const { username } = req.body;
+  try {
+    db.prepare('INSERT INTO participants (event_id, username) VALUES (?, ?)').run(req.params.id, username);
+    res.json({ success: true });
+  } catch {
+    res.json({ success: false, message: 'Already joined!' });
+  }
+});
+
+app.get('/api/events/:id/participants', (req, res) => {
+  const participants = db.prepare('SELECT username FROM participants WHERE event_id = ?').all(req.params.id);
+  res.json(participants);
+});
+app.get('/api/users/:username/joined', (req, res) => {
+  const events = db.prepare(`
+    SELECT events.* FROM events
+    JOIN participants ON events.id = participants.event_id
+    WHERE participants.username = ?
+  `).all(req.params.username);
+  res.json(events);
+});
+app.delete('/api/events/:id/join', (req, res) => {
+  const { username } = req.body;
+  db.prepare('DELETE FROM participants WHERE event_id = ? AND username = ?').run(req.params.id, username);
+  res.json({ success: true });
+});
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

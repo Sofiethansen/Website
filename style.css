@@ -346,3 +346,85 @@ p.subtitle {
 .back-btn:hover {
   text-decoration: underline;
 }
+.delete-btn {
+  margin-top: 24px;
+  background-color: #c0392b;
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background-color: #a93226;
+}
+.events-layout {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.events-column {
+  flex: 1;
+}
+
+.events-column h3 {
+  color: #27500a;
+  font-size: 20px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #c0dd97;
+}
+
+#events-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+#my-events-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.join-btn {
+  margin-top: 12px;
+  background-color: #639922;
+  color: white;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.join-btn:hover {
+  background-color: #3b6d11;
+}
+
+.join-btn.joined {
+  background-color: #c0dd97;
+  color: #27500a;
+  cursor: default;
+}
+.unjoin-btn {
+  margin-top: 12px;
+  background-color: white;
+  color: #c0392b;
+  border: 1px solid #c0392b;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.unjoin-btn:hover {
+  background-color: #fdf0ef;
+}

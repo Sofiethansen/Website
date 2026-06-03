@@ -12,9 +12,10 @@
   <div class="menu-icon" onclick="toggleMenu()">☰</div>
 
   <div class="sidebar" id="sidebar">
-    <a href="#">📋 Information</a>
-    <a href="#">🗺️ Map</a>
-    <a href="#">👤 Profile</a>
+    <a href="#"> Information</a>
+    <a href="#"> Map</a>
+    <a href="/joined.html">Your Events</a>
+    <a href="#"> Profile</a>
     <a href="#" onclick="openLoginModal()"> Login</a>
   </div>
 
@@ -61,7 +62,20 @@
     <button class="submit-btn" onclick="submitEvent()">Add Event</button>
   </div>
 </div>
-  <div id="events-container"></div>
+  <div class="events-layout">
+    <div id="joined-events-panel" style="display:none; max-width:600px; margin: 40px auto; padding: 0 20px;">
+  <h2 style="color:#27500a; border-bottom: 2px solid #c0dd97; padding-bottom:8px;">Your Joined Events</h2>
+  <div id="joined-events-container"></div>
+</div>
+  <div class="events-column">
+    <h3>All Events</h3>
+    <div id="events-container"></div>
+  </div>
+  <div class="events-column">
+    <h3>My Events</h3>
+    <div id="my-events-container"></div>
+  </div>
+</div>
 
   <script src="script.js"></script>
 </body>
