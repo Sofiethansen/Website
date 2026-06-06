@@ -49,7 +49,7 @@ function submitAuth() {
 function showProfile(username) {
     currentUser = username;
     localStorage.setItem('currentUser', username);
-  document.getElementById('profile-icon').style.display = 'flex';
+  document.getElementById('profile-icon').style.display = 'inline-flex';
   document.getElementById('profile-initial').textContent = username[0].toUpperCase();
   document.getElementById('profile-username').textContent = username;
 }
@@ -116,7 +116,8 @@ function addEventCard(event) {
     <div class="card-body">
       <p> <strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
       <p> <strong>Location:</strong> ${event.location}</p>
-      <span class="badge">🎨 ${event.category}</span>
+      <span class="badge"> ${event.category}</span>
+      <p style="font-size:13px; color:#639922; margin-top:8px;"> ${event.participant_count} ${event.participant_count === 1 ? 'person' : 'people'} joined</p>
       ${event.creator ? `<p style="font-size:12px; color:#639922; margin-top:8px;">👤 Created by ${event.creator}</p>` : ''}
     </div>
   `;
@@ -136,7 +137,7 @@ if (savedUser) {
 function showMyJoinedEvents() {
   const currentUser = localStorage.getItem('currentUser');
   if (!currentUser) {
-    alert('Please log in to see your joined events!');
+    alert('log in to see your joined events!');
     return;
   }
 
@@ -166,11 +167,24 @@ function showMyJoinedEvents() {
           <div class="card-body">
             <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
             <p><strong>Location:</strong> ${event.location}</p>
-            <span class="badge">🎨 ${event.category}</span>
+            <span class="badge">${event.category}</span>
           </div>
         `;
         card.onclick = () => window.location.href = '/event.html?id=' + event.id;
         container.appendChild(card);
       });
-    });
+    });''
+}
+function filterEvents() {
+  const search = document.getElementById('search-input').value.toLowerCase();
+  const category = document.getElementById('category-filter').value.toLowerCase();
+  const cards = document.querySelectorAll('#events-container .event-card');
+
+  cards.forEach(card => {
+    const title = card.querySelector('h2').textContent.toLowerCase();
+    const badge = card.querySelector('.badge').textContent.toLowerCase();
+    const matchesSearch = title.includes(search);
+    const matchesCategory = category === '' || badge.includes(category);
+    card.style.display = matchesSearch && matchesCategory ? 'block' : 'none';
+  });
 }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Profile</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="detail-container">
+      <a href="/" class="back-btn">← Back to events</a>
+      <div class="profile-page-icon">
+        <span id="profile-page-initial"></span>
+      </div>
+      <h1 id="profile-page-username"></h1>
+      <div class="profile-form">
+        <h3>Edit your profile</h3>
+        <label>Username</label>
+        <input type="text" id="edit-username" placeholder="Username" />
+        <label>Email</label>
+        <input type="email" id="edit-email" placeholder="Email address" />
+        <label>Phone number</label>
+        <input type="text" id="edit-phone" placeholder="Phone number" />
+        <button class="submit-btn" onclick="saveProfile()">Save changes</button>
+        <p id="profile-msg" style="color:#639922; margin-top:10px;"></p>
+      </div>
+    </div>
+    <script src="profile.js"></script>
+  </body>
+</html>

@@ -36,7 +36,12 @@ if (count.count === 0) {
 }
 
 app.get('/api/events', (req, res) => {
-  const events = db.prepare('SELECT * FROM events').all();
+  const events = db.prepare(`
+    SELECT events.*, COUNT(participants.id) as participant_count 
+    FROM events 
+    LEFT JOIN participants ON events.id = participants.event_id
+    GROUP BY events.id
+  `).all();
   res.json(events);
 });
 
@@ -109,5 +114,37 @@ app.delete('/api/events/:id/join', (req, res) => {
   const { username } = req.body;
   db.prepare('DELETE FROM participants WHERE event_id = ? AND username = ?').run(req.params.id, username);
   res.json({ success: true });
+});
+db.exec(`
+  CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT UNIQUE,
+    password TEXT,
+    email TEXT,
+    phone TEXT
+  )
+`);
+app.get('/api/users/:username', (req, res) => {
+  try {
+    const user = db.prepare('SELECT username, email, phone FROM users WHERE username = ?').get(req.params.username);
+    res.json(user || {});
+  } catch (err) {
+    console.error(err);
+    res.json({});
+  }
+});
+
+app.put('/api/users/:username', (req, res) => {
+  const { newUsername, email, phone } = req.body;
+  try {
+    db.prepare('UPDATE users SET username = ?, email = ?, phone = ? WHERE username = ?').run(newUsername, email, phone, req.params.username);
+    res.json({ success: true });
+  } catch (err) {
+    if (newUsername !== req.params.username) {
+      res.json({ success: false, message: 'Username already taken!' });
+    } else {
+      res.json({ success: false, message: 'Something went wrong!' });
+    }
+  }
 });
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));

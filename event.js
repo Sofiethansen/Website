@@ -12,11 +12,12 @@ fetch('/api/events/' + id)
       <div class="event-hero" style="background-image: url('https://source.unsplash.com/800x300/?${encodeURIComponent(event.category)}')"></div>
       <div class="event-content">
         <h1>${event.title}</h1>
-        <p>📅 <strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
-        <p>📍 <strong>Location:</strong> ${event.location}</p>
-        <p>🎨 <strong>Category:</strong> ${event.category}</p>
+        <p><strong>Date:</strong> ${event.date.split('-').reverse().join('-')}</p>
+        <p> <strong>Location:</strong> ${event.location}</p>
+        <p> <strong>Category:</strong> ${event.category}</p>
         <p>${event.description || ''}</p>
-        ${event.creator ? `<p>👤 <strong>Created by:</strong> ${event.creator}</p>` : ''}
+        ${event.creator ? `<p> <strong>Created by:</strong> ${event.creator}</p>` : ''}
+        <p id="participant-count"> Loading...</p>
         ${isMyEvent ? `<button class="delete-btn" onclick="deleteEvent(${event.id})">🗑️ Delete event</button>` : ''}
         ${!isMyEvent && currentUser ? `<button class="join-btn" id="join-btn" onclick="toggleJoin(${event.id})">Join Event</button>` : ''}
       </div>
