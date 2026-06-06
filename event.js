@@ -23,18 +23,21 @@ fetch('/api/events/' + id)
       </div>
     `;
 
-    if (!isMyEvent && currentUser) {
-      fetch('/api/events/' + id + '/participants')
-        .then(res => res.json())
-        .then(participants => {
-          const joined = participants.some(p => p.username === currentUser);
-          const btn = document.getElementById('join-btn');
-          if (btn && joined) {
-            btn.textContent = 'Leave Event';
-            btn.classList.add('joined');
-          }
-        });
+   fetch('/api/events/' + id + '/participants')
+  .then(res => res.json())
+  .then(participants => {
+    document.getElementById('participant-count').textContent =
+      ' ' + participants.length + (participants.length === 1 ? ' person joined' : ' people joined');
+
+    const btn = document.getElementById('join-btn');
+    if (btn) {
+      const joined = participants.some(p => p.username === currentUser);
+      if (joined) {
+        btn.textContent = 'Leave Event';
+        btn.classList.add('joined');
+      }
     }
+  });
   });
 
 function toggleJoin(eventId) {
