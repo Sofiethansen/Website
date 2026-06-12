@@ -1,3 +1,7 @@
+<!-- This file contains the CSS styles for the website
+Covers layout, navigation, event cards, forms, modals,
+  buttons, and page specific styles for the detail,
+  profile, and information pages
 body {
   font-family: Arial, sans-serif;
   background-color: #f0f7f0;
@@ -295,7 +299,7 @@ p.subtitle {
 }
 
 .events-column h3 {
-  color: #27500a;
+  color: green;
   font-size: 20px;
   margin-bottom: 16px;
   padding-bottom: 8px;

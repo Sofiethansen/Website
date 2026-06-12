@@ -4,13 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Copenhagen Events</title>
+    //Loads external styles for the page
     <link rel="stylesheet" href="style.css" />
   </head>
  <body>
-
+// Navigation bar with links to different pages and login/profile options
 <nav class="navbar">
   <div class="navbar-left">
     <a href="/" class="navbar-logo">Copenhagen Events</a>
+    //Profile icon shown only when a user is logged in (hidden by default)
     <div class="profile-icon" id="profile-icon" style="display:none" onclick="toggleProfileMenu()">
       <span id="profile-initial">S</span>
     </div>
@@ -20,42 +22,44 @@
     <a href="/map.html">Map</a>
     <a href="/joined.html"> Your Events</a>
     <a href="/profile.html"> Profile</a>
+    //Login link shown when no user is logged in (hidden by default)
     <a href="#" onclick="openLoginModal()"> Login</a>
   </div>
 </nav>
 
   <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-  <!-- Login/Signup Modal -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()"></div>
-
+// Modal for login/signup
 <div class="modal" id="auth-modal">
   <h2 id="modal-title">Login</h2>
-
+// Input fields for username and password
   <input type="text" id="auth-username" placeholder="Username" />
   <input type="password" id="auth-password" placeholder="Password" />
-
+// Button to submit login/signup form and switch between modes
   <button class="submit-btn" onclick="submitAuth()">Continue</button>
   <p class="switch-auth">Don't have an account? <span onclick="switchMode()">Sign up</span></p>
+  // Error message display for authentication issues
   <p id="auth-error" style="color: red; font-size: 13px;"></p>
 </div>
 
-<!-- Profile icon (hidden until logged in) -->
+// Profile icon (hidden until logged in)
 <div class="profile-icon" id="profile-icon" style="display:none" onclick="toggleProfileMenu()">
   <span id="profile-initial">S</span>
 </div>
-
+// Profile menu shown when clicking the profile icon (hidden by default)
 <div class="profile-menu" id="profile-menu" style="display:none">
   <p id="profile-username"></p>
   <button onclick="logout()">Log out</button>
 </div>
 
-  <!-- Main content -->
+// Main content
   <h1>Creative Events in Copenhagen</h1>
   <p class="subtitle">Discover creative events and meet new people</p>
   <h2 class="section-title">Events coming up</h2>
+  //Button for the create event form
 <div class="create-section">
   <button class="create-btn" onclick="toggleForm()">+ Create Event</button>
-
+//Form for creating a new event, hidden by default
   <div class="create-form" id="create-form">
     <h2>Create a new event</h2>
     <input type="text" id="input-title" placeholder="Event title" />
@@ -64,9 +68,11 @@
     <input type="text" id="input-category" placeholder="Category (e.g. Music, Art)" />
     <textarea id="input-description" placeholder="Describe your event..."></textarea>
     <input type="file" id="input-photo" accept="image/*" />
+    //Button to submit the new event form and create the event
     <button class="submit-btn" onclick="submitEvent()">Add Event</button>
   </div>
 </div>
+// Search bar with text input and category filter
 <div class="search-bar">
   <input type="text" id="search-input" placeholder="Search events..." oninput="filterEvents()" />
   <select id="category-filter" onchange="filterEvents()">
@@ -78,21 +84,25 @@
     <option value="Sport">Sport</option>
   </select>
 </div>
+//Three-column layout: joined events panel, all events, and the user's own events
   <div class="events-layout">
+    //Panel showing events the user has joined, hidden by default until there are joined events to show
     <div id="joined-events-panel" style="display:none; max-width:600px; margin: 40px auto; padding: 0 20px;">
   <h2 style="color:#27500a; border-bottom: 2px solid #c0dd97; padding-bottom:8px;">Your Joined Events</h2>
   <div id="joined-events-container"></div>
 </div>
   <div class="events-column">
     <h3>All Events</h3>
+    //Container where all events will be dynamically loaded
     <div id="events-container"></div>
   </div>
   <div class="events-column">
     <h3>My Events</h3>
+    //Container where events created by the logged in user will be dynamically loaded
     <div id="my-events-container"></div>
   </div>
 </div>
-
+//Loads the main JavaScript file that handles all the dynamic functionality of the page
   <script src="script.js"></script>
 </body>
 </html>

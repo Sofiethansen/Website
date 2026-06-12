@@ -1,12 +1,13 @@
 const express = require('express');
 const Database = require('better-sqlite3');
 const app = express();
-
+//Serve static files from the current directory and parse JSON request bodies
 app.use(express.static('.'));
+//Parse JSON request bodies for API endpoints
 app.use(express.json());
-
+//Initialize the SQLite database and create tables if they don't exist
 const db = new Database('database.db');
-
+//Create the "events" table to store event information
 db.exec(`
   CREATE TABLE IF NOT EXISTS events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,6 +19,7 @@ db.exec(`
     creator TEXT
   )
 `);
+//Create the "users" table to store user information
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,6 +27,7 @@ db.exec(`
     password TEXT
   )
 `);
+//If the "events" table is empty, insert some sample events to populate the page
 const count = db.prepare('SELECT COUNT(*) as count FROM events').get();
 if (count.count === 0) {
   const insert = db.prepare('INSERT INTO events (title, date, location, category, description, creator) VALUES (?, ?, ?, ?, ?, ?)');
@@ -34,7 +37,7 @@ if (count.count === 0) {
   insert.run('Knitting Meetup', '2026-07-18', 'Frederiksberg', 'Crafts', '','');
   insert.run('Running for Beginners', '2026-07-22', 'Fælledparken', 'Sport', '', '');
 }
-
+//GET /api/events endpoint to fetch all events with their participant count
 app.get('/api/events', (req, res) => {
   const events = db.prepare(`
     SELECT events.*, COUNT(participants.id) as participant_count 
@@ -44,7 +47,7 @@ app.get('/api/events', (req, res) => {
   `).all();
   res.json(events);
 });
-
+//POST /api/events endpoint to create a new event with the provided data
 app.post('/api/events', (req, res) => {
   const { title, date, location, category, description, creator } = req.body;
   const stmt = db.prepare('INSERT INTO events (title, date, location, category, description, creator) VALUES (?, ?, ?, ?, ?, ?)');
@@ -52,6 +55,7 @@ app.post('/api/events', (req, res) => {
   const newEvent = { id: result.lastInsertRowid, title, date, location, category, description, creator };
   res.json(newEvent);
 });
+//POST /api/signup register a new user -  fails if username is already taken
 app.post('/api/signup', (req, res) => {
   const { username, password } = req.body;
   try {
@@ -59,10 +63,11 @@ app.post('/api/signup', (req, res) => {
     const result = stmt.run(username, password);
     res.json({ success: true, username });
   } catch (err) {
+    //If the error is due to a UNIQUE constraint violation, it means the username is already taken
     res.json({ success: false, message: 'Username already taken!' });
   }
 });
-
+//POST /api/login check if the provided username and password match a user in the database
 app.post('/api/login', (req, res) => {
   const { username, password } = req.body;
   const user = db.prepare('SELECT * FROM users WHERE username = ? AND password = ?').get(username, password);
@@ -72,14 +77,17 @@ app.post('/api/login', (req, res) => {
     res.json({ success: false, message: 'Wrong username or password!' });
   }
 });
+//GET /api/events/:id to fetch details of a specific event by its ID
 app.get('/api/events/:id', (req, res) => {
   const event = db.prepare('SELECT * FROM events WHERE id = ?').get(req.params.id);
   res.json(event);
 });
+//DELETE /api/events/:id to delete an event by its ID
 app.delete('/api/events/:id', (req, res) => {
   db.prepare('DELETE FROM events WHERE id = ?').run(req.params.id);
   res.json({ success: true });
 });
+//Create the "participants" table to store which users have joined which events, with a UNIQUE constraint to prevent duplicate entries
 db.exec(`
   CREATE TABLE IF NOT EXISTS participants (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -88,20 +96,23 @@ db.exec(`
     UNIQUE(event_id, username)
   )
 `);
+//POST /api/events/:id/join to add a participant to an event, fails if the user has already joined
 app.post('/api/events/:id/join', (req, res) => {
   const { username } = req.body;
   try {
     db.prepare('INSERT INTO participants (event_id, username) VALUES (?, ?)').run(req.params.id, username);
     res.json({ success: true });
   } catch {
+    //If the UNIQUE constraint is violated, it means the user has already joined this event
     res.json({ success: false, message: 'Already joined!' });
   }
 });
-
+//GET /api/events/:id/participants to fetch the list of participants for a specific event
 app.get('/api/events/:id/participants', (req, res) => {
   const participants = db.prepare('SELECT username FROM participants WHERE event_id = ?').all(req.params.id);
   res.json(participants);
 });
+//GET /api/users/:username/joined - return all events a user has joined
 app.get('/api/users/:username/joined', (req, res) => {
   const events = db.prepare(`
     SELECT events.* FROM events
@@ -110,11 +121,13 @@ app.get('/api/users/:username/joined', (req, res) => {
   `).all(req.params.username);
   res.json(events);
 });
+//DELETE /api/events/:id/join to remove a participant from an event
 app.delete('/api/events/:id/join', (req, res) => {
   const { username } = req.body;
   db.prepare('DELETE FROM participants WHERE event_id = ? AND username = ?').run(req.params.id, username);
   res.json({ success: true });
 });
+//Extend the "users" table to include email and phone number fields for the profile page
 db.exec(`
   CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -124,6 +137,7 @@ db.exec(`
     phone TEXT
   )
 `);
+//GET /api/users/:username fetch a user's profile (excluding password)
 app.get('/api/users/:username', (req, res) => {
   try {
     const user = db.prepare('SELECT username, email, phone FROM users WHERE username = ?').get(req.params.username);
@@ -133,7 +147,7 @@ app.get('/api/users/:username', (req, res) => {
     res.json({});
   }
 });
-
+//PUT /api/users/:username update a user's username, email and phonenumber
 app.put('/api/users/:username', (req, res) => {
   const { newUsername, email, phone } = req.body;
   try {
@@ -147,4 +161,5 @@ app.put('/api/users/:username', (req, res) => {
     }
   }
 });
+//Run the server
 app.listen(3000, () => console.log('Server running on http://localhost:3000'));
