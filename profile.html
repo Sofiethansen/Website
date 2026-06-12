@@ -4,18 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Your Profile</title>
-    //share same stylesheet
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    //Container for the profile page with a back button, profile icon, username and form to edit profile details
     <div class="detail-container">
       <a href="/" class="back-btn">← Back to events</a>
-      //Profile icon that shows the first letter of the username
       <div class="profile-page-icon">
         <span id="profile-page-initial"></span>
       </div>
-      //Username displayed on the profile page
       <h1 id="profile-page-username"></h1>
       <div class="profile-form">
         <h3>Edit your profile</h3>
@@ -25,14 +21,11 @@
         <input type="email" id="edit-email" placeholder="Email address" />
         <label>Phone number</label>
         <input type="text" id="edit-phone" placeholder="Phone number" />
-        //Button to save profile changes and display a success message
-        //Due to errors, the code will not safe the changes
-        //Claude.ai were used to write the function, but it is not working as intended and will not update the profile information
         <button class="submit-btn" onclick="saveProfile()">Save changes</button>
         <p id="profile-msg" style="color:#639922; margin-top:10px;"></p>
       </div>
     </div>
-    //Loads the JavaScript that fetches and displays the user's profile information and handles profile editing
+    
     <script src="profile.js"></script>
   </body>
 </html>
